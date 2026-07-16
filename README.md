@@ -36,6 +36,41 @@ class Database {
 };
 ```
 
+## How to Build
+
+Each `ChapterNN/` directory contains its examples as `src/*.cc`, built as one executable per file.
+
+Requirements: CMake 3.14+ and a C++20 compiler. [Google Benchmark](https://github.com/google/benchmark) and [GoogleTest](https://github.com/google/googletest) are optional — examples that need them are skipped with a message when the library is not installed. A few examples that intentionally fail to compile (the book demonstrates the compile error) are also skipped; see the `SKIP` lists in the chapter `CMakeLists.txt` files.
+
+### Entire build
+
+Configure once from the repository root, then build everything or any single example by target name:
+
+```sh
+cmake --preset default            # configures into build/ (Debug, exports compile_commands.json)
+cmake --build build --parallel 8  # build all chapters
+cmake --build build --target 01_visitor   # or build a single example
+./build/Chapter17/01_visitor              # run it
+```
+
+For the benchmark examples, use the optimized build — timing numbers from a Debug build are meaningless:
+
+```sh
+cmake --preset release
+cmake --build build-release --parallel 8
+```
+
+### Per-chapter build
+
+Every chapter is also an independent CMake project. Presets only apply at the repository root, so pass the options yourself. For example, inside a chapter directory:
+
+```sh
+cd Chapter04
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel 8
+./build/01a_vector_swap
+```
+
 **Following is what you need for this book:**
 This book is for experienced C++ developers and programmers who wish to learn about software design patterns and principles and apply them to create robust, reusable, and easily maintainable programs and software systems.
 
